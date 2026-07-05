@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://pk-news.com/sitemap.xml
+
+# Block admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /config/
+Disallow: /includes/
+Disallow: /uploads/
+Disallow: /logs/
+Disallow: /backups/
+
+# Block system files
+Disallow: /*.sql$
+Disallow: /*.log$
+
+# Crawl delay (optional)
+Crawl-delay: 1

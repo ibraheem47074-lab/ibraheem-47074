@@ -1,0 +1,207 @@
+/* Real-time Interaction Stats Styles */
+.interaction-stats {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 1px solid #dee2e6;
+}
+
+.stat-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+}
+
+.stat-display {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #e9ecef;
+    font-size: 1.2rem;
+    font-weight: bold;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.like-btn {
+    background: white;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 1.2rem;
+    font-weight: bold;
+    min-height: 60px;
+    width: 100%;
+    transition: all 0.3s ease;
+    color: #dc3545;
+}
+
+.like-btn:hover {
+    background: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.like-btn.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.like-btn.btn-danger:hover {
+    background: #c82333;
+    border-color: #c82333;
+}
+
+.like-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.real-time-indicator {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.real-time-indicator .fa-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Notification styles */
+.alert {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: none;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .interaction-stats {
+        padding: 15px;
+    }
+    
+    .stat-display,
+    .like-btn {
+        font-size: 1rem;
+        padding: 10px;
+        min-height: 50px;
+    }
+    
+    .stat-item small {
+        font-size: 0.75rem;
+    }
+}
+
+/* Enhanced share buttons */
+.share-btn {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    margin: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.share-facebook {
+    background: #1877f2;
+    color: white;
+}
+
+.share-facebook:hover {
+    background: #166fe5;
+}
+
+.share-twitter {
+    background: #1da1f2;
+    color: white;
+}
+
+.share-twitter:hover {
+    background: #1c91da;
+}
+
+.share-whatsapp {
+    background: #25d366;
+    color: white;
+}
+
+.share-whatsapp:hover {
+    background: #21bd5c;
+}
+
+.share-linkedin {
+    background: #0077b5;
+    color: white;
+}
+
+.share-linkedin:hover {
+    background: #0066a3;
+}
+
+.share-telegram {
+    background: #0088cc;
+    color: white;
+}
+
+.share-telegram:hover {
+    background: #0077b8;
+}
+
+.share-email {
+    background: #ea4335;
+    color: white;
+}
+
+.share-email:hover {
+    background: #d93025;
+}
+
+/* Loading animation */
+.fa-spinner.fa-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Pulse effect for real-time updates */
+.stat-display.updated {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Error Fixes Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .test-pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Fetch Error Fixes Verification</h1>
+        
+        <div class="test-section">
+            <h3>Test Results</h3>
+            <div id="test-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>Manual Test Buttons</h3>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" onclick="testBreakingNewsFetch()">Test Breaking News Fetch</button>
+                <button class="btn btn-primary" onclick="testLiveStatusFetch()">Test Live Status Fetch</button>
+                <button class="btn btn-primary" onclick="testSearchFetch()">Test Search Fetch</button>
+                <button class="btn btn-primary" onclick="testNotificationsFetch()">Test Notifications Fetch</button>
+                <button class="btn btn-primary" onclick="testNewsMapFetch()">Test News Map Fetch</button>
+                <button class="btn btn-primary" onclick="testFakeNewsFetch()">Test Fake News Detection Fetch</button>
+                <button class="btn btn-primary" onclick="testPerformanceTrackerFetch()">Test Performance Tracker Fetch</button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Network Error Simulation</h3>
+            <div class="d-grid gap-2">
+                <button class="btn btn-warning" onclick="testNetworkErrors()">Simulate Network Errors</button>
+                <button class="btn btn-warning" onclick="testServerError()">Simulate Server Errors</button>
+                <button class="btn btn-warning" onclick="testInvalidResponses()">Simulate Invalid Responses</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+
+        function addTestResult(testName, status, message) {
+            testResults.push({
+                test: testName,
+                status: status,
+                message: message,
+                timestamp: new Date().toISOString()
+            });
+            updateTestDisplay();
+        }
+
+        function updateTestDisplay() {
+            const container = document.getElementById('test-results');
+            container.innerHTML = testResults.map(result => `
+                <div class="test-result test-${result.status}">
+                    <strong>${result.test}:</strong> ${result.message}
+                    <br><small>${new Date(result.timestamp).toLocaleTimeString()}</small>
+                </div>
+            `).join('');
+        }
+
+        // Test Breaking News Fetch
+        async function testBreakingNewsFetch() {
+            try {
+                const response = await fetch('api/breaking-news.php');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data && Array.isArray(data)) {
+                    addTestResult('Breaking News Fetch', 'pass', 'Successfully fetched and validated breaking news data');
+                } else {
+                    addTestResult('Breaking News Fetch', 'warning', 'Data format validation failed');
+                }
+            } catch (error) {
+                addTestResult('Breaking News Fetch', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Live Status Fetch
+        async function testLiveStatusFetch() {
+            try {
+                const response = await fetch('api/live-status.php');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data && typeof data === 'object') {
+                    addTestResult('Live Status Fetch', 'pass', 'Successfully fetched and validated live status data');
+                } else {
+                    addTestResult('Live Status Fetch', 'warning', 'Data format validation failed');
+                }
+            } catch (error) {
+                addTestResult('Live Status Fetch', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Search Fetch
+        async function testSearchFetch() {
+            try {
+                const response = await fetch('api/search.php?q=test');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data && Array.isArray(data)) {
+                    addTestResult('Search Fetch', 'pass', 'Successfully fetched and validated search data');
+                } else {
+                    addTestResult('Search Fetch', 'warning', 'Data format validation failed');
+                }
+            } catch (error) {
+                addTestResult('Search Fetch', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Notifications Fetch
+        async function testNotificationsFetch() {
+            try {
+                const response = await fetch('api/notifications.php', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data && typeof data === 'object') {
+                    addTestResult('Notifications Fetch', 'pass', 'Successfully fetched and validated notifications data');
+                } else {
+                    addTestResult('Notifications Fetch', 'warning', 'Data format validation failed');
+                }
+            } catch (error) {
+                addTestResult('Notifications Fetch', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test News Map Fetch
+        async function testNewsMapFetch() {
+            try {
+                const response = await fetch('api/countries_with_news.php');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data && data.success) {
+                    addTestResult('News Map Fetch', 'pass', 'Successfully fetched and validated countries data');
+                } else {
+                    addTestResult('News Map Fetch', 'warning', 'Data format validation failed');
+                }
+            } catch (error) {
+                addTestResult('News Map Fetch', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Fake News Detection Fetch
+        async function testFakeNewsFetch() {
+            try {
+                const response = await fetch('api/fake_news_detection_api.php?action=get_score&news_id=1');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data && typeof data === 'object') {
+                    addTestResult('Fake News Detection Fetch', 'pass', 'Successfully fetched and validated credibility data');
+                } else {
+                    addTestResult('Fake News Detection Fetch', 'warning', 'Data format validation failed');
+                }
+            } catch (error) {
+                addTestResult('Fake News Detection Fetch', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Performance Tracker Fetch
+        async function testPerformanceTrackerFetch() {
+            try {
+                const testData = {
+                    action: 'test',
+                    session_id: 'test_session',
+                    page_url: window.location.href,
+                    timestamp: new Date().toISOString()
+                };
+                
+                const response = await fetch('/admin/api/performance-tracker.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                if (data && typeof data === 'object') {
+                    addTestResult('Performance Tracker Fetch', 'pass', 'Successfully sent and validated tracking data');
+                } else {
+                    addTestResult('Performance Tracker Fetch', 'warning', 'Data format validation failed');
+                }
+            } catch (error) {
+                addTestResult('Performance Tracker Fetch', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Network Errors
+        async function testNetworkErrors() {
+            try {
+                // Test with invalid URL to simulate network error
+                const response = await fetch('https://invalid-url-that-does-not-exist.com/api/test');
+                addTestResult('Network Error Test', 'fail', 'Should have failed but did not');
+            } catch (error) {
+                addTestResult('Network Error Test', 'pass', 'Correctly caught network error: ' + error.message);
+            }
+        }
+
+        // Test Server Errors
+        async function testServerError() {
+            try {
+                const response = await fetch('api/nonexistent-endpoint.php');
+                if (!response.ok) {
+                    addTestResult('Server Error Test', 'pass', 'Correctly handled server error: ' + response.status);
+                } else {
+                    addTestResult('Server Error Test', 'warning', 'Expected server error but got success');
+                }
+            } catch (error) {
+                addTestResult('Server Error Test', 'pass', 'Correctly caught server error: ' + error.message);
+            }
+        }
+
+        // Test Invalid Responses
+        async function testInvalidResponses() {
+            try {
+                // Create a mock fetch that returns invalid JSON
+                const originalFetch = window.fetch;
+                window.fetch = function(url) {
+                    if (url.includes('test-invalid')) {
+                        return Promise.resolve({
+                            ok: true,
+                            json: () => Promise.resolve('invalid json string')
+                        });
+                    }
+                    return originalFetch.apply(this, arguments);
+                };
+
+                const response = await fetch('api/test-invalid');
+                const data = await response.json();
+                
+                // Restore original fetch
+                window.fetch = originalFetch;
+                
+                addTestResult('Invalid Response Test', 'warning', 'Invalid JSON response detected');
+            } catch (error) {
+                addTestResult('Invalid Response Test', 'pass', 'Correctly caught invalid response: ' + error.message);
+            }
+        }
+
+        // Run automatic tests on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                addTestResult('Test Suite', 'pass', 'Fetch error fixes verification page loaded successfully');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+/* Heatmap CSS for PK Live News */
+
+/* Base heatmap styles */
+.heatmap-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.heatmap-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.heatmap-point {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Heatmap intensity levels */
+.heatmap-low {
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.3), transparent);
+}
+
+.heatmap-medium {
+    background: radial-gradient(circle, rgba(255, 255, 0, 0.5), transparent);
+}
+
+.heatmap-high {
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.7), transparent);
+}
+
+/* News card heatmap effects */
+.news-card.heatmap-hot {
+    border: 2px solid #ff6b6b;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+.news-card.heatmap-warm {
+    border: 2px solid #ffd93d;
+    box-shadow: 0 0 15px rgba(255, 217, 61, 0.2);
+}
+
+.news-card.heatmap-cool {
+    border: 2px solid #6bcf7f;
+    box-shadow: 0 0 10px rgba(107, 207, 127, 0.1);
+}
+
+/* Interactive heatmap */
+.heatmap-interactive {
+    cursor: pointer;
+}
+
+.heatmap-interactive:hover .heatmap-point {
+    transform: scale(1.2);
+}
+
+/* Heatmap legend */
+.heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.heatmap-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.heatmap-legend-color {
+    width: 20px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+/* Responsive heatmap */
+@media (max-width: 768px) {
+    .heatmap-point {
+        transform: scale(0.8);
+    }
+    
+    .heatmap-legend {
+        font-size: 0.7rem;
+    }
+}

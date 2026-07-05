@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Performance API Test</title>
+</head>
+<body>
+    <h1>Performance API Test</h1>
+    <button onclick="testAPI()">Test API</button>
+    <button onclick="testSimpleAPI()">Test Simple API</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>Testing main API...</p>';
+            
+            try {
+                const apiPath = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/api/news-performance.php');
+                console.log('Testing:', apiPath);
+                
+                const response = await fetch(apiPath);
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                result.innerHTML = `
+                    <h3>Main API Response:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Error:', error);
+                result.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+        
+        async function testSimpleAPI() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>Testing simple API...</p>';
+            
+            try {
+                const apiPath = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/api/test-api.php');
+                console.log('Testing:', apiPath);
+                
+                const response = await fetch(apiPath);
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                result.innerHTML = `
+                    <h3>Simple API Response:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Error:', error);
+                result.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

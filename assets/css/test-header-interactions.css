@@ -1,0 +1,92 @@
+/* Test Header Interactions - External CSS Styles */
+
+/* Search Dropdown Styles */
+.search-results {
+    display: none;
+}
+
+.search-dropdown .dropdown-menu,
+.search-dropdown-menu {
+    min-width: 300px;
+}
+
+/* Notification Dropdown Styles */
+.notification-dropdown {
+    min-width: 350px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-badge {
+    display: none;
+}
+
+/* User Menu Styles */
+.user-dropdown .dropdown-menu {
+    min-width: 200px;
+}
+
+/* Header Icon Styles */
+.header-icon-btn {
+    border: none;
+    background: transparent;
+}
+
+.header-icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Search Form Styles */
+.header-search-form {
+    padding: 10px;
+}
+
+.header-search-form .input-group {
+    display: flex;
+}
+
+.header-search-form input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.header-search-form button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .header-right {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .header-icon-wrapper {
+        margin-bottom: 10px;
+    }
+}
+
+/* Accessibility Styles */
+.header-icon-btn:focus,
+.notification-btn:focus,
+.user-dropdown button:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Animation Styles */
+.dropdown-menu {
+    animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

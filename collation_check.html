@@ -1,0 +1,102 @@
+<?php
+// Rename this file to .php for proper execution
+header('Content-Type: text/html; charset=UTF-8');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collation Check</title>
+    <link rel="stylesheet" href="assets/css/collation-check.css">
+</head>
+<body>
+    <h1>Table Collation Check</h1>
+    <p>Open this file through your web server to check collations.</p>
+    
+    <?php
+    if (isset($_GET['check'])) {
+        require_once 'config/database.php';
+        
+        echo "<h2>Checking table collations...</h2>";
+        
+        // Check news_sources table collation
+        echo "<h3>news_sources table</h3>";
+        $result = mysqli_query($conn, "SHOW CREATE TABLE news_sources");
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            echo "<pre>" . htmlspecialchars($row['Create Table']) . "</pre>";
+        }
+        
+        // Check categories table collation
+        echo "<h3>categories table</h3>";
+        $result = mysqli_query($conn, "SHOW CREATE TABLE categories");
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            echo "<pre>" . htmlspecialchars($row['Create Table']) . "</pre>";
+        }
+        
+        // Check news table collation for source_url column
+        echo "<h3>news table</h3>";
+        $result = mysqli_query($conn, "SHOW CREATE TABLE news");
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            echo "<pre>" . htmlspecialchars($row['Create Table']) . "</pre>";
+        }
+        
+        // Check specific column collations
+        echo "<h3>Column collations</h3>";
+        $columns_to_check = [
+            'news_sources.rss_url',
+            'news.source_url',
+            'categories.name'
+        ];
+        
+        foreach ($columns_to_check as $column) {
+            $parts = explode('.', $column);
+            $table = $parts[0];
+            $col = $parts[1];
+            
+            $result = mysqli_query($conn, "SELECT COLLATION_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '$table' AND COLUMN_NAME = '$col'");
+            if ($result && $row = mysqli_fetch_assoc($result)) {
+                echo "<p><strong>$column:</strong> " . $row['COLLATION_NAME'] . "</p>";
+            }
+        }
+        
+        echo "<h3>Test the problematic query</h3>";
+        $test_query = "SELECT ns.*, c.name as category_name,
+                       (SELECT COUNT(*) FROM news WHERE source_url = ns.rss_url) as imported_count,
+                       (SELECT MAX(created_at) FROM news WHERE source_url = ns.rss_url) as last_import_date
+                       FROM news_sources ns 
+                       LEFT JOIN categories c ON ns.category_id = c.id 
+                       WHERE ns.type = 'rss' OR ns.type IS NULL
+                       ORDER BY ns.created_at DESC";
+        
+        $result = mysqli_query($conn, $test_query);
+        if ($result) {
+            echo "<p class='success'>Query executed successfully!</p>";
+        } else {
+            echo "<p class='error'>Query failed: " . mysqli_error($conn) . "</p>";
+        }
+        
+        echo "<h3>Test the FIXED query</h3>";
+        $fixed_query = "SELECT ns.*, c.name as category_name,
+                       (SELECT COUNT(*) FROM news WHERE source_url COLLATE utf8mb4_unicode_ci = ns.rss_url COLLATE utf8mb4_unicode_ci) as imported_count,
+                       (SELECT MAX(created_at) FROM news WHERE source_url COLLATE utf8mb4_unicode_ci = ns.rss_url COLLATE utf8mb4_unicode_ci) as last_import_date
+                       FROM news_sources ns 
+                       LEFT JOIN categories c ON ns.category_id = c.id 
+                       WHERE ns.type = 'rss' OR ns.type IS NULL
+                       ORDER BY ns.created_at DESC";
+        
+        $result = mysqli_query($conn, $fixed_query);
+        if ($result) {
+            echo "<p class='success'>FIXED Query executed successfully!</p>";
+        } else {
+            echo "<p class='error'>FIXED Query failed: " . mysqli_error($conn) . "</p>";
+        }
+    }
+    ?>
+    
+    <p><a href="?check=1">Run Collation Check</a></p>
+</body>
+</html>

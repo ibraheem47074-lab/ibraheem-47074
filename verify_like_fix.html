@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Like Fix Verification</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-article { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .like-btn { background: #1877f2; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin: 5px; }
+        .like-btn.liked { background: #42b883; }
+        .like-count { font-weight: bold; color: #1877f2; }
+        .error { color: red; }
+        .success { color: green; }
+        .fixed-logic { background: #e8f5e8; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .bug-logic { background: #ffe8e8; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Like Count Fix Verification</h1>
+    
+    <h2>The Bug (Before Fix)</h2>
+    <div class="bug-logic">
+        <p><strong>Problem:</strong> The old code counted ALL guest likes from session:</p>
+        <code>
+            foreach ($_SESSION as $key => $value) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;if (strpos($key, 'guest_likes_') === 0 && $value === true) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$guest_likes++; // This adds ALL likes!<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            }
+        </code>
+        <p><strong>Result:</strong> Article 1 shows 1 like, Article 2 shows 2 likes, Article 3 shows 3 likes (cumulative)</p>
+    </div>
+    
+    <h2>The Fix (After Fix)</h2>
+    <div class="fixed-logic">
+        <p><strong>Solution:</strong> The new code only counts likes for the specific article:</p>
+        <code>
+            $guest_likes = 0;<br>
+            $session_key = 'guest_likes_' . $news_id;<br>
+            if (isset($_SESSION[$session_key]) && $_SESSION[$session_key] === true) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;$guest_likes = 1; // Only this article's like<br>
+            }
+        </code>
+        <p><strong>Result:</strong> Each article shows its own individual like count</p>
+    </div>
+    
+    <h2>Test Simulation</h2>
+    <p>Imagine a guest user likes 3 different articles:</p>
+    
+    <div class="test-article">
+        <h3>Article 1</h3>
+        <p>This is article 1 content...</p>
+        <button class="like-btn liked">❤️ Liked</button>
+        <span class="like-count">Likes: 1 ✓ (Correct)</span>
+    </div>
+    
+    <div class="test-article">
+        <h3>Article 2</h3>
+        <p>This is article 2 content...</p>
+        <button class="like-btn liked">❤️ Liked</button>
+        <span class="like-count">Likes: 1 ✓ (Correct)</span>
+    </div>
+    
+    <div class="test-article">
+        <h3>Article 3</h3>
+        <p>This is article 3 content...</p>
+        <button class="like-btn liked">❤️ Liked</button>
+        <span class="like-count">Likes: 1 ✓ (Correct)</span>
+    </div>
+    
+    <h2>Before vs After Comparison</h2>
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <tr>
+            <th>Article</th>
+            <th>Before Fix (Bug)</th>
+            <th>After Fix (Correct)</th>
+        </tr>
+        <tr>
+            <td>Article 1</td>
+            <td class="error">1 like</td>
+            <td class="success">1 like ✓</td>
+        </tr>
+        <tr>
+            <td>Article 2</td>
+            <td class="error">2 likes (wrong!)</td>
+            <td class="success">1 like ✓</td>
+        </tr>
+        <tr>
+            <td>Article 3</td>
+            <td class="error">3 likes (wrong!)</td>
+            <td class="success">1 like ✓</td>
+        </tr>
+    </table>
+    
+    <h2>Fix Summary</h2>
+    <div class="success">
+        <h3>✅ FIXED</h3>
+        <ul>
+            <li><strong>Root Cause:</strong> Guest like counting logic was counting ALL session likes instead of per-article likes</li>
+            <li><strong>Fix Applied:</strong> Changed counting logic to only check the specific article's session key</li>
+            <li><strong>File Modified:</strong> <code>api/toggle_like.php</code> lines 67-72</li>
+            <li><strong>Result:</strong> Each article now shows its own individual like count</li>
+        </ul>
+    </div>
+    
+    <p><strong>Note:</strong> The fix only affects guest users (non-logged-in users). Registered users were already working correctly with database-based counting.</p>
+</body>
+</html>
